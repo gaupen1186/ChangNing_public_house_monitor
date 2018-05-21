@@ -164,5 +164,5 @@ if __name__ == '__main__':
 
     scheduler = BackgroundScheduler()
     #scheduler.add_job(job_func, 'cron', hour='0-23', minute=5)
-    scheduler.add_job(job_func, 'cron', hour='0-23', second='0,15,30,45')
+    scheduler.add_job(job_func, 'cron', hour='0-23', second='0,30')
     scheduler.start()
