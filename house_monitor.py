@@ -9,7 +9,7 @@ from html.parser import HTMLParser
 import requests
 from datetime import datetime
 import time
-from apscheduler.schedulers.background import BackgroundScheduler
+from apscheduler.schedulers.blocking import BlockingScheduler
 import os
 import logging
 
@@ -162,7 +162,7 @@ if __name__ == '__main__':
     fileHandler.setFormatter(formatter)
     logger.addHandler(fileHandler)
 
-    scheduler = BackgroundScheduler()
+    scheduler = BlockingScheduler()
     #scheduler.add_job(job_func, 'cron', hour='0-23', minute=5)
     scheduler.add_job(job_func, 'cron', hour='0-23', second='0,30')
     scheduler.start()
