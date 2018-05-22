@@ -117,9 +117,10 @@ def job_func():
             if len(new_result)!=0 and len(last_result)!=0:
                 if new_result==last_result:
                     tmp_log = '公告无更新'
-                    #Send_email(tmp_log)
                     print('%s %s' % (str(datetime.now()), tmp_log))
                     logger.info(tmp_log)
+                    if datetime.time(datetime.now()).hour==15:
+                        Send_email(tmp_log)
                 else:
                     tmp_log = '有新公告：%s' %new_result
                     Send_email(tmp_log)
