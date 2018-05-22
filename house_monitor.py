@@ -119,7 +119,8 @@ def job_func():
                     tmp_log = '公告无更新'
                     print('%s %s' % (str(datetime.now()), tmp_log))
                     logger.info(tmp_log)
-                    if datetime.time(datetime.now()).hour==15:
+                    # 无论是否有新公告，每天09点都会发一次邮件通知
+                    if datetime.time(datetime.now()).hour==daily_notif_time:
                         Send_email(tmp_log)
                 else:
                     tmp_log = '有新公告：%s' %new_result
@@ -146,6 +147,7 @@ tmp_log = ''
 loop_cnt = 1
 first_excute = True
 html_content = None
+daily_notif_time = 9 # 通告无更新时候的每日通知时间，默认为9点
 
 if __name__ == '__main__':
 
