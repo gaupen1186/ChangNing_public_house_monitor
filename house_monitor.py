@@ -35,12 +35,12 @@ def Send_email(content, from_addr='18117510016@189.cn',
         server.sendmail(from_addr, [to_addr], mail.as_string())
     except:
         tmp_log = 'Send email failed.'
-        logger.error('%s %s' % (str(datetime.now()), tmp_log))
+        logger.error(tmp_log)
         print('%s %s' % (str(datetime.now()), tmp_log))
     else:
         server.quit()
         tmp_log = 'E-mail has been sent.'
-        logger.info('%s %s' % (str(datetime.now()), tmp_log))
+        logger.error(tmp_log)
         print('%s %s' % (str(datetime.now()), tmp_log))
 
 #定义HTMLParser的子类,用以复写HTMLParser中的方法
@@ -84,7 +84,7 @@ def job_func():
     global first_excute
 
     tmp_log = 'Loop counter = %d' %loop_cnt
-    logger.info('%s %s' % (str(datetime.now()), tmp_log))
+    logger.info(tmp_log)
     print('%s %s' % (str(datetime.now()), tmp_log))
 
     try:
@@ -94,6 +94,7 @@ def job_func():
         network_error = True
         print('%s %s' % (str(datetime.now()), e))
         Send_email(str(e))
+        return
 
     if network_error!=True and html_content!=None:
         # 创建子类实例
@@ -108,20 +109,19 @@ def job_func():
         else:
             tmp_log = '获取到的公告字符串为空'
             send_email(tmp_log)
-            logger.error('%s %s' % (str(datetime.now()), tmp_log))
             print('%s %s' % (str(datetime.now()), tmp_log))
+            logger.error(tmp_log)
 
-        # 判断比较
         #不是第一次运行
         if first_excute!=True:
             if len(new_result)!=0 and len(last_result)!=0:
                 if new_result==last_result:
                     tmp_log = '公告无更新'
-                    Send_email(tmp_log)
+                    #Send_email(tmp_log)
                     print('%s %s' % (str(datetime.now()), tmp_log))
                     logger.info(tmp_log)
                 else:
-                    tmp_log = '有新公告请尽快查看：%s' %new_result
+                    tmp_log = '有新公告：%s' %new_result
                     Send_email(tmp_log)
                     print('%s %s' % (str(datetime.now()), tmp_log))
                     logger.info(tmp_log)
@@ -137,6 +137,7 @@ def job_func():
         last_result = parser.data[0]
 
 url = 'http://www.shcngz.com/pages/news_list.aspx?mid=29'
+#url = 'http://127.0.0.1:8080/test.aspx'
 last_result = ''
 new_result = ''
 network_error = False
@@ -150,7 +151,7 @@ if __name__ == '__main__':
     # create logger
     logger_name = "log"
     log_path = "./log.log"
-    fmt = "【%(asctime)-15s %(levelname)s】 %(message)s"
+    fmt = "%(asctime)-15s【%(levelname)s】 %(message)s"
     datefmt = "%Y/%m/%d %H:%M:%S"
 
     logger = logging.getLogger(logger_name)
@@ -163,6 +164,6 @@ if __name__ == '__main__':
     logger.addHandler(fileHandler)
 
     scheduler = BlockingScheduler()
-    #scheduler.add_job(job_func, 'cron', hour='0-23', minute=5)
-    scheduler.add_job(job_func, 'cron', hour='0-23', second='0,30')
+    scheduler.add_job(job_func, 'cron', hour='0-23', minute='0,3,5', second=10)
+    #scheduler.add_job(job_func, 'cron', hour='0-23', second='0,15,30,45')
     scheduler.start()
