@@ -17,9 +17,9 @@ def _format_addr(s):
     name, addr = parseaddr(s)
     return formataddr((Header(name, 'utf-8').encode(), addr))
 
-def Send_email(content, from_addr='18117510016@189.cn',
-               password='gaupen11860016',
-               to_addr='18117510016@189.cn',
+def Send_email(content, from_addr='xxx@189.cn',
+               password='xxx',
+               to_addr='xxx@189.cn',
                smtp_server='smtp.189.cn'):
     smtp_port = 25
 
